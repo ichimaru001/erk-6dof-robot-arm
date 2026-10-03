@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<robot name="erk" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- World Fixed Link -->
+  <link name="world"/>
+
+  <joint name="world_to_base" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.05087" radius="0.0425"/>
+      </geometry>
+      <material name="orange">
+        <color rgba="1.0 0.5 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.05087" radius="0.0425"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.2"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Joint 1: Base Rotation (Revolute around Z) -->
+  <joint name="Revolute_1" type="revolute">
+    <parent link="base_link"/>
+    <child link="base_link_upper"/>
+    <origin xyz="0 0 0.05087" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0.0" upper="3.14159" effort="40.0" velocity="0.2"/>
+  </joint>
+
+  <!-- Rotating Base Upper -->
+  <link name="base_link_upper">
+    <visual>
+      <geometry>
+        <cylinder length="0.04" radius="0.035"/>
+      </geometry>
+      <material name="white">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.04" radius="0.035"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Joint 2: Shoulder Lift (Revolute around Y) -->
+  <joint name="Revolute_2" type="revolute">
+    <parent link="base_link_upper"/>
+    <child link="arm_link_1"/>
+    <origin xyz="0 0 0.04" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-3.14159" upper="0.0" effort="40.0" velocity="0.2"/>
+  </joint>
+
+  <!-- Upper Arm Link 1 -->
+  <link name="arm_link_1">
+    <visual>
+      <origin xyz="0 0 0.05655" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03 0.03 0.11312"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.05655" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03 0.03 0.11312"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.15"/>
+      <origin xyz="0 0 0.05655"/>
+      <inertia ixx="0.0002" ixy="0" ixz="0" iyy="0.0002" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+</robot>
