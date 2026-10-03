@@ -1,0 +1,29 @@
+/**:
+  ros__parameters:
+    moveit_default_planning_pipeline: ompl
+    ompl:
+      arm:
+        default_planner_config: RRTConnectkConfigDefault
+        planner_configs:
+        - RRTConnectkConfigDefault
+        - RRTstarConfigDefault
+      planner_configs:
+        RRTConnectkConfigDefault:
+          range: 0.0
+          type: geometric::RRTConnect
+        RRTstarConfigDefault:
+          range: 0.0
+          type: geometric::RRTstar
+      planning_plugin: ompl_interface/OMPLPlanner
+      request_adapters:
+      - default_planning_request_adapters/AddRRTConnectDefaultState
+      - default_planning_request_adapters/ResolveConstraintFrames
+      - default_planning_request_adapters/FixWorkspaceBounds
+      - default_planning_request_adapters/FixStartStateBounds
+      - default_planning_request_adapters/FixStartStateCollision
+      - default_planning_request_adapters/FixStartStatePathConstraints
+      response_adapters:
+      - default_planning_response_adapters/AddTimeOptimalParameterization
+      - default_planning_response_adapters/ValidateSolution
+    planning_pipelines:
+    - ompl

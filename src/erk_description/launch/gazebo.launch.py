@@ -1,8 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, ExecuteProcess, RegisterEventHandler, TimerAction
-from launch.event_handlers import OnProcessExit
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 import xacro
@@ -13,7 +12,7 @@ def generate_launch_description():
 
     robot_description_raw = xacro.process_file(xacro_file).toxml()
 
-    # Node 1: Robot State Publisher
+    # 1. Robot State Publisher
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -41,18 +40,22 @@ def generate_launch_description():
         arguments=['-topic', 'robot_description', '-name', 'erk', '-z', '0.0']
     )
 
-    # 4. Spawners for Controllers
-    load_joint_state_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'run', 'ros2_control', 'spawner', 'joint_state_broadcaster'],
+    # 4. Spawners using controller_manager package
+    load_joint_state_broadcaster = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster'],
         output='screen'
     )
 
-    load_joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'run', 'ros2_control', 'spawner', 'joint_trajectory_controller'],
+    load_joint_trajectory_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_trajectory_controller'],
         output='screen'
     )
 
-    # Bridge between ROS and Gazebo Clock
+    # 5. Clock Bridge
     clock_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',

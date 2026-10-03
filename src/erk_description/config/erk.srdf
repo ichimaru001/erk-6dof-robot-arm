@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="erk">
+
+  <!-- Virtual Joint to Anchor Base to World -->
+  <virtual_joint name="world_joint" type="fixed" parent_frame="world" child_link="base_link"/>
+
+  <!-- Planning Group: Main Arm Chain -->
+  <group name="arm">
+    <chain base_link="base_link" tip_link="gripper_base"/>
+  </group>
+
+  <!-- Planning Group: Gripper -->
+  <group name="gripper">
+    <joint name="Gripper"/>
+  </group>
+
+  <!-- End Effector Definition -->
+  <end_effector name="gripper_eef" parent_link="gripper_base" group="gripper" parent_group="arm"/>
+
+  <!-- Named Poses -->
+  <group_state name="home" group="arm">
+    <joint name="Revolute_1" value="0.0"/>
+    <joint name="Revolute_2" value="0.0"/>
+    <joint name="Revolute_3" value="0.0"/>
+    <joint name="Revolute_4" value="0.0"/>
+    <joint name="Revolute_5" value="0.0"/>
+  </group_state>
+
+  <group_state name="open" group="gripper">
+    <joint name="Gripper" value="0.8"/>
+  </group_state>
+
+  <group_state name="closed" group="gripper">
+    <joint name="Gripper" value="0.0"/>
+  </group_state>
+
+  <!-- Disable Self-Collisions for Adjacent Links -->
+  <disable_collisions link1="base_link" link2="base_link_upper" reason="Adjacent"/>
+  <disable_collisions link1="base_link_upper" link2="arm_link_1" reason="Adjacent"/>
+  <disable_collisions link1="arm_link_1" link2="arm_link_2" reason="Adjacent"/>
+  <disable_collisions link1="arm_link_2" link2="arm_link_3" reason="Adjacent"/>
+  <disable_collisions link1="arm_link_3" link2="gripper_base" reason="Adjacent"/>
+  <disable_collisions link1="gripper_base" link2="gripper_finger_left" reason="Adjacent"/>
+
+</robot>
