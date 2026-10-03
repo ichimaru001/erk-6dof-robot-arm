@@ -10,7 +10,7 @@
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
 
-  <!-- Base Link -->
+  <!-- 1. Base Link -->
   <link name="base_link">
     <visual>
       <geometry>
@@ -32,7 +32,7 @@
     </inertial>
   </link>
 
-  <!-- Joint 1: Base Rotation (Revolute around Z) -->
+  <!-- Joint 1: Base Rotation (Z-axis) -->
   <joint name="Revolute_1" type="revolute">
     <parent link="base_link"/>
     <child link="base_link_upper"/>
@@ -41,7 +41,7 @@
     <limit lower="0.0" upper="3.14159" effort="40.0" velocity="0.2"/>
   </joint>
 
-  <!-- Rotating Base Upper -->
+  <!-- 2. Rotating Base Upper -->
   <link name="base_link_upper">
     <visual>
       <geometry>
@@ -63,7 +63,7 @@
     </inertial>
   </link>
 
-  <!-- Joint 2: Shoulder Lift (Revolute around Y) -->
+  <!-- Joint 2: Shoulder Lift (Y-axis) -->
   <joint name="Revolute_2" type="revolute">
     <parent link="base_link_upper"/>
     <child link="arm_link_1"/>
@@ -72,7 +72,7 @@
     <limit lower="-3.14159" upper="0.0" effort="40.0" velocity="0.2"/>
   </joint>
 
-  <!-- Upper Arm Link 1 -->
+  <!-- 3. Upper Arm Link 1 -->
   <link name="arm_link_1">
     <visual>
       <origin xyz="0 0 0.05655" rpy="0 0 0"/>
@@ -91,6 +91,130 @@
       <mass value="0.15"/>
       <origin xyz="0 0 0.05655"/>
       <inertia ixx="0.0002" ixy="0" ixz="0" iyy="0.0002" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Joint 3: Elbow Pitch (Y-axis) -->
+  <joint name="Revolute_3" type="revolute">
+    <parent link="arm_link_1"/>
+    <child link="arm_link_2"/>
+    <origin xyz="0 0 0.11312" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0.0" upper="3.14159" effort="40.0" velocity="0.2"/>
+  </joint>
+
+  <!-- 4. Forearm Link 2 -->
+  <link name="arm_link_2">
+    <visual>
+      <origin xyz="0 0 0.0491" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.025 0.025 0.0982"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.0491" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.025 0.025 0.0982"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0.0491"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Joint 4: Forearm Roll (Z-axis) -->
+  <joint name="Revolute_4" type="revolute">
+    <parent link="arm_link_2"/>
+    <child link="arm_link_3"/>
+    <origin xyz="0 0 0.0982" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" effort="20.0" velocity="0.2"/>
+  </joint>
+
+  <!-- 5. Wrist Bracket Link 3 -->
+  <link name="arm_link_3">
+    <visual>
+      <origin xyz="0 0 0.016" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.0321"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.016" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.0321"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin xyz="0 0 0.016"/>
+      <inertia ixx="0.00005" ixy="0" ixz="0" iyy="0.00005" iyz="0" izz="0.00005"/>
+    </inertial>
+  </link>
+
+  <!-- Joint 5: Wrist Tilt (Y-axis) -->
+  <joint name="Revolute_5" type="revolute">
+    <parent link="arm_link_3"/>
+    <child link="gripper_base"/>
+    <origin xyz="0 0 0.0321" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.5708" upper="1.5708" effort="20.0" velocity="0.2"/>
+  </joint>
+
+  <!-- 6. Gripper Base -->
+  <link name="gripper_base">
+    <visual>
+      <origin xyz="0 0 0.015" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.04 0.02 0.03"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.015" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.04 0.02 0.03"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <origin xyz="0 0 0.015"/>
+      <inertia ixx="0.00005" ixy="0" ixz="0" iyy="0.00005" iyz="0" izz="0.00005"/>
+    </inertial>
+  </link>
+
+  <!-- Joint 6: Gripper Jaw (Revolute/Prismatic) -->
+  <joint name="Gripper" type="revolute">
+    <parent link="gripper_base"/>
+    <child link="gripper_finger_left"/>
+    <origin xyz="0.015 0 0.03" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0.0" upper="0.8" effort="10.0" velocity="0.2"/>
+  </joint>
+
+  <!-- Left Finger Link -->
+  <link name="gripper_finger_left">
+    <visual>
+      <origin xyz="0 0 0.015" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.005 0.01 0.03"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.015" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.005 0.01 0.03"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0.015"/>
+      <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
     </inertial>
   </link>
 
